@@ -1,0 +1,6 @@
+# Function dependencies, for example:
+# package>=version
+requests>=2.20.0
+simple-salesforce>=0.74.2
+google-cloud-logging==1.11.0
+google-cloud-secret-manager==0.2.0
