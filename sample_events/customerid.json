@@ -1,0 +1,28 @@
+{
+   "detectIntentResponseId": "344f68f3-38c9-40d0-94ee-139dd649c33a",
+   "intentInfo": {
+       "lastMatchedIntent": "projects/hospitality-demo-361210/locations/global/agents/fcb0a3b6-8299-4a9d-87e0-3731db89eab2/intents/96609211-7b5b-44d2-9e0f-8fd7809b863a",
+       "displayName": "Developing Feature",
+       "confidence": 1.0
+   },
+   "pageInfo": {
+       "currentPage": "projects/hospitality-demo-361210/locations/global/agents/fcb0a3b6-8299-4a9d-87e0-3731db89eab2/flows/6186a5bc-e4a6-4534-9ee8-a5f3f609de38/pages/d0ab2cb3-a453-4b27-b74d-04d063bb654c",
+       "displayName": "WebHook Trigger"
+   },
+   "sessionInfo": {
+       "session": "projects/hospitality-demo-361210/locations/global/agents/fcb0a3b6-8299-4a9d-87e0-3731db89eab2/sessions/28e4ee-c85-b68-d51-34c8a8648",
+       "parameters": {
+           "customerid": "+34664004600",
+           "customerpin": "1234",
+           "customerverified": True,
+           "first_name": ""Juanan"",
+           "last_name": ""Estival"",
+           "reservations_list": 2.0
+       }
+   },
+   "fulfillmentInfo": {
+       "tag": "phoneLookup"
+   },
+   "text": "new feature",
+   "languageCode": "en"
+}
