@@ -63,6 +63,14 @@ def sf_phoneLookup(initial_request, sf):
             c_firstItem = customer_records[0]
             customer_id = c_firstItem["Id"]
             print (customer_id)
+            contact_dict = sf.Contact.get(customer_id)
+            print("Contact data {}".format(contact_dict))
+            #for key, value in contact_dict.items():
+            #    print(key, value)
+            last_name = contact_dict.get("LastName")
+            first_name = contact_dict.get("FirstName")
+            print("Last Name: {}".format(last_name))
+            print("First Name: {}".format(first_name))
         elif total_records == 0:
             print("zero")   
         else:
