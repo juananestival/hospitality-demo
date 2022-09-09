@@ -29,14 +29,12 @@ def main(initial_request):
 
         # Evaluate Tag
         if tag == 'phoneLookup':
-
             whatDoIHave = sf_phoneLookup(initial_request, sf)
-
+            WebhookResponse=answer_webhook(whatDoIHave)
+            return WebhookResponse
         else:
             print("Else: ")
-
-        # Check sf_request
-        tag = request_json['fulfillmentInfo']['tag']
+            
         msg = 'hola'
         WebhookResponse=answer_webhook(msg)
         return WebhookResponse
@@ -54,29 +52,36 @@ def sf_phoneLookup(initial_request, sf):
     print(query_string)
     
     try:
-        customers_by_phone = sf.query(query_string)
-        print("customers by phone {}".format(customers_by_phone))
-        total_records = customers_by_phone.get("totalSize")
-        if total_records == 1:
-            print("one")
-            customer_records = customers_by_phone.get("records")
-            c_firstItem = customer_records[0]
-            customer_id = c_firstItem["Id"]
-            print (customer_id)
-            contact_dict = sf.Contact.get(customer_id)
-            print("Contact data {}".format(contact_dict))
+        sf_customer_id, last_name, first_name = get_sf_contact_id(initial_request,sf)
+        #customers_by_phone = sf.query(query_string)
+        #print("customers by phone {}".format(customers_by_phone))
+        #total_records = customers_by_phone.get("totalSize")
+        #if total_records == 1:
+        #    print("one")
+        #    customer_records = customers_by_phone.get("records")
+        #    c_firstItem = customer_records[0]
+        #    customer_id = c_firstItem["Id"]
+        #    print (customer_id)
+        #    contact_dict = sf.Contact.get(customer_id)
+        #    print("Contact data {}".format(contact_dict))
             #for key, value in contact_dict.items():
             #    print(key, value)
-            last_name = contact_dict.get("LastName")
-            first_name = contact_dict.get("FirstName")
-            print("Last Name: {}".format(last_name))
-            print("First Name: {}".format(first_name))
-        elif total_records == 0:
-            print("zero")   
-        else:
-            print("more")
-        returnMessage = "Just text"
-        return returnMessage
+            #last_name = contact_dict.get("LastName")
+            #first_name = contact_dict.get("FirstName")
+            #print("Last Name: {}".format(last_name))
+            #print("First Name: {}".format(first_name))
+            #query_cases_string = "SELECT Id, CaseNumber, CreatedDate, Status, Subject, ContactId FROM Case Where ContactId = '{}' Order by CaseNumber DESC Limit 5 '{}'".format(customer_id)
+            #print(query_cases_string)
+            #cases_by_contact = sf.query(query_cases_string)
+            #print(cases_by_contact)   
+        return first_name + " " + last_name
+            
+        #elif total_records == 0:
+        #    print("zero")   
+        #else:
+        #    print("more")
+        #returnMessage = "Just text"
+        #return returnMessage
     except Exception as error:
         print("Phone Lookup error " + repr(error))    
         
@@ -94,6 +99,53 @@ def answer_webhook(msg):
     }
     return Response(json.dumps(message), 200)
     #return Response(json.dumps(message), 200, mimetype='application/json')
+
+###############################################################################
+def get_sf_contact_id(initial_request, sf):
+    request_json = initial_request.get_json()
+    param_customer_id = request_json['sessionInfo']['parameters']['customerid']
+    query_string = "SELECT Id FROM Contact  WHERE Phone = '{}'".format(param_customer_id)
+    print(query_string)
+    
+    try:
+        get_sf_customers_by_phone = sf.query(query_string)
+        print("SFDC Customers by phone {}".format(get_sf_customers_by_phone ))
+        total_sf_records = get_sf_customers_by_phone.get("totalSize")
+        
+        if total_sf_records == 1:
+            print("One record returned")
+            customer_records = get_sf_customers_by_phone.get("records")
+            get_customer_record = customer_records[0]
+            sf_customer_id = get_customer_record["Id"]
+            print ("Salesforce Id: {}".format(sf_customer_id))
+            sf_contact_dict = sf.Contact.get(sf_customer_id)
+            print("Contact data {}".format(sf_contact_dict))
+            #for key, value in contact_dict.items():
+            #    print(key, value)
+            last_name = sf_contact_dict.get("LastName")
+            first_name = sf_contact_dict.get("FirstName")
+            print("Last Name: {}".format(last_name))
+            print("First Name: {}".format(first_name))
+            return sf_customer_id, last_name, first_name
+            
+        elif total_sf_records == 0:
+            print("Zero records returned")   
+            sf_customer_id = "none"
+            return sf_customer_id
+        else:
+            print("More than one record match the query")
+            sf_customer_id = "multiple"
+            return sf_customer_id
+        
+    except Exception as error:
+        print("Phone Lookup error " + repr(error))    
+    
+
+    sf_contact_id = ""
+    return sf_contact_id
+    print("to implement")
+
+
 
 ###############################################################################
 def sf_login():

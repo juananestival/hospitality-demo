@@ -21,3 +21,6 @@ pip install functions-framework
 pip install -r requirements.txt
 
 
+https://pypi.org/project/simple-salesforce/
+
+Note if you copy past the number in Dialog Flow console then a unicode character si addad 202 for the copy paste and the query don'tm work
