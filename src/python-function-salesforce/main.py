@@ -32,9 +32,10 @@ def main(initial_request):
             whatDoIHave = sf_phoneLookup(initial_request, sf)
             WebhookResponse=answer_webhook(whatDoIHave)
             return WebhookResponse
+        
         elif tag == 'caseLookup':
-            msg = 'Case lookup tag to be implemented'
-            WebhookResponse=answer_webhook(msg)
+            sf_case = get_sf_cases(initial_request, sf)
+            WebhookResponse=answer_webhook(sf_case)
             return WebhookResponse
             
         else:
@@ -42,19 +43,35 @@ def main(initial_request):
             WebhookResponse=answer_webhook(msg)
             return WebhookResponse
             
-        
     except:
         print("")
 
 
 # Add your functions here
+def get_sf_cases(initial_request, sf):
+    cid, name, lastName = get_sf_contact_id(initial_request, sf)
+    
+    query_cases_string = "SELECT Id, CaseNumber, CreatedDate, Status, Subject, ContactId FROM Case Where ContactId = '{}' Order by CaseNumber DESC Limit 5".format(cid)
+    print(query_cases_string)
+    cases_by_contact = sf.query(query_cases_string)
+    total_sf_records= cases_by_contact.get("totalSize")
+    if total_sf_records == 1:
+        print("One record returned")
+        case_records = cases_by_contact.get("records")
+        get_customer_record = case_records[0]
+        sf_case_subject = get_customer_record["Subject"]
+        print(sf_case_subject)
+        return sf_case_subject
+    else:
+        return "tbe implemented"
+        
+  
 
 ###############################################################################
 def sf_phoneLookup(initial_request, sf):
     request_json = initial_request.get_json()
     param_customer_id = request_json['sessionInfo']['parameters']['customerid']
     query_string = "SELECT Id FROM Contact  WHERE Phone = '{}'".format(param_customer_id)
-    print(query_string)
     
     try:
         sf_customer_id, last_name, first_name = get_sf_contact_id(initial_request,sf)
@@ -110,11 +127,9 @@ def get_sf_contact_id(initial_request, sf):
     request_json = initial_request.get_json()
     param_customer_id = request_json['sessionInfo']['parameters']['customerid']
     query_string = "SELECT Id FROM Contact  WHERE Phone = '{}'".format(param_customer_id)
-    print(query_string)
     
     try:
         get_sf_customers_by_phone = sf.query(query_string)
-        print("SFDC Customers by phone {}".format(get_sf_customers_by_phone ))
         total_sf_records = get_sf_customers_by_phone.get("totalSize")
         
         if total_sf_records == 1:
@@ -129,9 +144,11 @@ def get_sf_contact_id(initial_request, sf):
             #    print(key, value)
             last_name = sf_contact_dict.get("LastName")
             first_name = sf_contact_dict.get("FirstName")
-            print("Last Name: {}".format(last_name))
-            print("First Name: {}".format(first_name))
-            return sf_customer_id, last_name, first_name
+            cid = sf_contact_dict.get("Id")
+            print("First Name: {}".format(first_name) + "Last Name: {}".format(last_name) +"CID: {}".format(cid))
+       
+
+            return cid, last_name, first_name
             
         elif total_sf_records == 0:
             print("Zero records returned")   
@@ -145,13 +162,6 @@ def get_sf_contact_id(initial_request, sf):
     except Exception as error:
         print("Phone Lookup error " + repr(error))    
     
-
-    sf_contact_id = ""
-    return sf_contact_id
-    print("to implement")
-
-
-
 ###############################################################################
 def sf_login():
     # Create the Secret Manager client.
