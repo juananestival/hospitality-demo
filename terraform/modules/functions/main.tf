@@ -3,7 +3,6 @@ locals {
   timestamp = formatdate("YYMMDDhhmmss", timestamp())
 	root_dir = abspath("../src/${var.sourcefn}")
 }
-
 # Compress source code
 data "archive_file" "source" {
   type        = "zip"
@@ -55,7 +54,6 @@ resource "google_cloudfunctions_function" "function" {
   environment_variables = {
     sftype_object = "Contact",
     gcp_project_id = "hospitality-demo-361210"
-    
   }
 }
 

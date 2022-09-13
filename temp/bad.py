@@ -1,3 +1,4 @@
+from inspect import _SourceObjectType
 from simple_salesforce import Salesforce, SalesforceLogin
 from simple_salesforce import SFType
 from google.cloud import secretmanager
@@ -6,11 +7,10 @@ from flask import Response, request
 import requests
 import json
 import os
+import time
 
 def main(initial_request):
-
     sftype_object = os.environ["sftype_object"]
-
     try:
         # Get http request and parse it. 
         ver = os.environ.get('K_REVISION')
@@ -29,16 +29,19 @@ def main(initial_request):
 
         # Evaluate Tag
         if tag == 'phoneLookup':
-            whatDoIHave = sf_phoneLookup(initial_request, sf)
-            WebhookResponse=answer_webhook(whatDoIHave)
+            phoneLookupResp = sf_phoneLookup(initial_request, sf)
+            WebhookResponse=answer_webhook(phoneLookupResp)
             return WebhookResponse
         elif tag == 'caseLookup':
-            msg = 'Case lookup tag to be implemented'
-            WebhookResponse=answer_webhook(msg)
-            return WebhookResponse
-            
+            """
+            print("to implwmwnr")
+            caseLookupResp = sf_caseLookup(initial_request, sf)
+            print("just before resp")
+            WebhookResponse=answer_webhook(caseLookupResp)
+            """
         else:
-            msg = 'I am not able to identify your request'
+            print("Else: ")
+            msg = 'hola'
             WebhookResponse=answer_webhook(msg)
             return WebhookResponse
             
@@ -92,6 +95,7 @@ def sf_phoneLookup(initial_request, sf):
         
 ###############################################################################
 def answer_webhook(msg):
+    print("answer_webhook")
     message= { "fulfillment_response": {
         "messages": [
             {   
@@ -150,8 +154,28 @@ def get_sf_contact_id(initial_request, sf):
     return sf_contact_id
     print("to implement")
 
+###############################################################################
+def sf_caseLookup(initial_request, sf):
+    print("to implement")
+    
+    try:
+        """ 
+        sf_customer_id, last_name, first_name = get_sf_contact_id(initial_request,sf)
+        query_cases_string = "SELECT Id, CaseNumber, CreatedDate, Status, Subject, ContactId FROM Case Where ContactId = '{}' Order by CaseNumber DESC Limit 5".format(sf_customer_id)
+        cases_by_contact = sf.query(query_cases_string)
+        print(cases_by_contact)  
+        totalCases =  cases_by_contact.get("totalSize")
+        print("total cases {}".format(totalCases))
+        caseOpenDict = cases_by_contact.get("records")
+        print("total caseOpenDict {}".format(caseOpenDict))
+        subject = caseOpenDict.get("subject")
+        print("subject  {}".format(subject))
+        """
+        
 
-
+        return ""
+    except:
+        return ""
 ###############################################################################
 def sf_login():
     # Create the Secret Manager client.
