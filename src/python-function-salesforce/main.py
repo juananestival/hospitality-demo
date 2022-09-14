@@ -51,8 +51,8 @@ def main(initial_request):
 
 # Add your functions here
 def get_sf_cases(initial_request, sf):
-    cid, name, lastName = get_sf_contact_id(initial_request, sf)
     
+    cid, name, lastName = get_sf_contact_id(initial_request, sf)
     query_cases_string = "SELECT Id, CaseNumber, CreatedDate, Status, Subject, ContactId FROM Case Where ContactId = '{}' Order by CaseNumber DESC Limit 5".format(cid)
     print(query_cases_string)
     cases_by_contact = sf.query(query_cases_string)
@@ -64,6 +64,24 @@ def get_sf_cases(initial_request, sf):
         sf_case_subject = get_customer_record["Subject"]
         print(sf_case_subject)
         return sf_case_subject
+    elif (total_sf_records > 1 ) and (total_sf_records <= 3):
+        print("total cases {}".format(total_sf_records))
+        case_records = cases_by_contact.get("records")
+        print(type(case_records))
+        get_customer_record = case_records[0]
+        sf_case_subject = get_customer_record["Subject"]
+        print(sf_case_subject)
+        get_customer_record = case_records[1]
+        sf_case_subject = get_customer_record["Subject"]
+        print(sf_case_subject)
+        
+        for x in case_records:
+            #get_customer_record = case_records[x]
+            #sf_case_subject = get_customer_record["Subject"]
+            print("hola")
+            print(case_records[x]["Subject"])
+        return "between 1 and 3"
+    
     else:
         return "tbe implemented"
         
