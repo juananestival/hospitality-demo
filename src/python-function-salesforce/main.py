@@ -35,7 +35,9 @@ def main(initial_request):
         
         elif tag == 'caseLookup':
             sf_case = get_sf_cases(initial_request, sf)
-            WebhookResponse=answer_webhook(sf_case)
+            #WebhookResponse=answer_webhook(sf_case)
+            WebhookResponse=answer_webhook_param("Case Information", sf_case) 
+            
             return WebhookResponse
             
         else:
@@ -107,6 +109,26 @@ def sf_phoneLookup(initial_request, sf):
     except Exception as error:
         print("Phone Lookup error " + repr(error))    
         
+###############################################################################
+def answer_webhook_param(msg, caseSubject):
+    message= {
+        "session_info": {
+            "parameters" : {
+                "casesubject":caseSubject
+            }    
+        },
+        "fulfillment_response": {
+            "messages": [
+                {   
+                    "text": {
+                        "text": [msg]
+                    }
+                }
+            ]
+        }
+    }
+    return Response(json.dumps(message), 200)
+    #return Response(json.dumps(message), 200, mimetype='application/json')
 ###############################################################################
 def answer_webhook(msg):
     message= { "fulfillment_response": {
