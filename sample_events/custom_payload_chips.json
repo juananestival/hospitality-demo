@@ -1,0 +1,29 @@
+{
+    "richContent": [
+      [
+        {
+          "type": "chips",
+          "options": [
+            {
+              "text": "Barcelona",
+              "image": {
+                "src": {
+                  "rawUrl": "https://hospitality-demo-361210.uc.r.appspot.com/images/barcelona.jpeg"
+                }
+              },
+              "link": "https://hospitality-demo-361210.uc.r.appspot.com/product/1"
+            },
+            {
+              "text": "Mallorca",
+              "image": {
+                "src": {
+                  "rawUrl": "https://hospitality-demo-361210.uc.r.appspot.com/images/mallorca.jpeg"
+                }
+              },
+              "link": "https://hospitality-demo-361210.uc.r.appspot.com/product/5"
+            }
+          ]
+        }
+      ]
+    ]
+  }

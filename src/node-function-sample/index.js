@@ -304,10 +304,35 @@ function getReservations (req, res) {
         });
       
       } else {
-        let answer = `Currently you have ${querySnapshot.size} reservations. The registered reservations are: `
+        var answerbylang
+        let lang = req.body.languageCode;
+        if (lang === "ca") {
+          answerbylang = `Actualment teniu reserves de ${querySnapshot.size}. Les reserves registrades són: `
+
+        } else if (lang === "es") {
+          answerbylang = `Actualmente tiene ${querySnapshot.size} reservas. Las reservas registradas son: `
+
+
+
+        } else {
+          answerbylang = `Currently you have ${querySnapshot.size} reservations. The registered reservations are: `
+        }
+
         querySnapshot.forEach((doc) => {
           console.log(doc.id, " => ", doc.data());
-          answer = answer + `Hotel ${JSON.stringify(doc.data().hotel)} for ${JSON.stringify(doc.data().nights)} nights.` 
+          if (lang === "ca") {
+            answerbylang = answerbylang + `Hotel ${JSON.stringify(doc.data().hotel)} per ${JSON.stringify(doc.data().nights)} nits.` 
+
+
+          } else if (lang === "es") {
+            answerbylang = answerbylang + `Hotel ${JSON.stringify(doc.data().hotel)} por ${JSON.stringify(doc.data().nights)} noches.` 
+
+
+          } else {
+            answerbylang = answerbylang + `Hotel ${JSON.stringify(doc.data().hotel)} for ${JSON.stringify(doc.data().nights)} nights.` 
+
+
+          }
         })
         res.status(200).send({
           sessionInfo: {
@@ -320,7 +345,7 @@ function getReservations (req, res) {
             messages: [
               {
                 text: {
-                  text: [answer],
+                  text: [answerbylang],
                 },
               },
             ],

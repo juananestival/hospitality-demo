@@ -1,0 +1,34 @@
+{
+  "detectIntentResponseId": "8bc6e55e-a4b0-4e7d-b590-5e6d0851a333",
+  "intentInfo": {
+    "lastMatchedIntent": "projects/hospitality-demo-361210/locations/global/agents/fcb0a3b6-8299-4a9d-87e0-3731db89eab2/intents/00000000-0000-0000-0000-000000000000",
+    "displayName": "Default Welcome Intent",
+    "confidence": 1
+  },
+  "pageInfo": {
+    "currentPage": "projects/hospitality-demo-361210/locations/global/agents/fcb0a3b6-8299-4a9d-87e0-3731db89eab2/flows/00000000-0000-0000-0000-000000000000/pages/abbd0d46-a3d3-41ee-acb2-04fbd2ec535f",
+    "displayName": "Check Channel"
+  },
+  "sessionInfo": {
+    "session": "projects/hospitality-demo-361210/locations/global/agents/fcb0a3b6-8299-4a9d-87e0-3731db89eab2/environments/-/sessions/103zRTS0gTpQQG4-ZrD6C9xZg",
+    "parameters": {
+      "channel": "chat",
+      "customerverified": "not-set",
+      "last_name": null
+    }
+  },
+  "fulfillmentInfo": { "tag": "channel-type" },
+  "messages": [
+    {
+      "text": {
+        "text": ["Bon dia! Què puc fer per tu avui?"],
+        "redactedText": ["Bon dia! Què puc fer per tu avui?"]
+      },
+      "responseType": "HANDLER_PROMPT",
+      "source": "VIRTUAL_AGENT"
+    }
+  ],
+  "payload": { "telephony": { "caller_id": "+14157369052" } },
+  "triggerIntent": "projects/hospitality-demo-361210/locations/global/agents/fcb0a3b6-8299-4a9d-87e0-3731db89eab2/intents/00000000-0000-0000-0000-000000000000",
+  "languageCode": "ca"
+}

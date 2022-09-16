@@ -36,13 +36,15 @@ def main(initial_request):
         elif tag == 'caseLookup':
             sf_case_id, sf_case_number, sf_case_subject, sf_case_description, sf_case_last_comment = get_sf_cases(initial_request, sf)
             #WebhookResponse=answer_webhook(sf_case_subject)
-            message = "We have found an open case: "
+            # for multilanguage is not usable to send text via webhook
+            message = " "
+            #message = "We have found an open case: "
             WebhookResponse=answer_webhook_param(message, sf_case_id, sf_case_number, sf_case_subject, sf_case_description, sf_case_last_comment) 
             
             return WebhookResponse
             
         else:
-            msg = 'I am not able to identify your request'
+            msg = 'Error'
             WebhookResponse=answer_webhook(msg)
             return WebhookResponse
             
