@@ -34,9 +34,10 @@ def main(initial_request):
             return WebhookResponse
         
         elif tag == 'caseLookup':
-            sf_case = get_sf_cases(initial_request, sf)
-            #WebhookResponse=answer_webhook(sf_case)
-            WebhookResponse=answer_webhook_param("Case Information", sf_case) 
+            sf_case_id, sf_case_number, sf_case_subject, sf_case_description, sf_case_last_comment = get_sf_cases(initial_request, sf)
+            #WebhookResponse=answer_webhook(sf_case_subject)
+            message = "We have found an open case: "
+            WebhookResponse=answer_webhook_param(message, sf_case_id, sf_case_number, sf_case_subject, sf_case_description, sf_case_last_comment) 
             
             return WebhookResponse
             
@@ -53,7 +54,7 @@ def main(initial_request):
 def get_sf_cases(initial_request, sf):
     
     cid, name, lastName = get_sf_contact_id(initial_request, sf)
-    query_cases_string = "SELECT Id, CaseNumber, CreatedDate, Status, Subject, ContactId FROM Case Where ContactId = '{}' Order by CaseNumber DESC Limit 5".format(cid)
+    query_cases_string = "SELECT Id, CaseNumber, Description, LastComment__c, CreatedDate, Status, Subject, ContactId FROM Case Where ContactId = '{}' Order by CaseNumber DESC Limit 5".format(cid)
     print(query_cases_string)
     cases_by_contact = sf.query(query_cases_string)
     total_sf_records= cases_by_contact.get("totalSize")
@@ -61,9 +62,15 @@ def get_sf_cases(initial_request, sf):
         print("One record returned")
         case_records = cases_by_contact.get("records")
         get_customer_record = case_records[0]
+
+        sf_case_id = get_customer_record["Id"]
+        sf_case_number = get_customer_record["CaseNumber"]
         sf_case_subject = get_customer_record["Subject"]
-        print(sf_case_subject)
-        return sf_case_subject
+        sf_case_description = get_customer_record["Description"],
+        sf_case_last_comment = get_customer_record["LastComment__c"]
+        
+        return sf_case_id, sf_case_number, sf_case_subject, sf_case_description, sf_case_last_comment 
+    
     elif (total_sf_records > 1 ) and (total_sf_records <= 3):
         print("total cases {}".format(total_sf_records))
         case_records = cases_by_contact.get("records")
@@ -128,24 +135,28 @@ def sf_phoneLookup(initial_request, sf):
         print("Phone Lookup error " + repr(error))    
         
 ###############################################################################
-def answer_webhook_param(msg, caseSubject):
-    message= {
+def answer_webhook_param(message, sf_case_id, sf_case_number, sf_case_subject, sf_case_description, sf_case_last_comment):
+    message_resp = {
         "session_info": {
             "parameters" : {
-                "casesubject":caseSubject
+                "caseid":sf_case_id,
+                "casenumber":sf_case_number,
+                "casesubject":sf_case_subject,
+                "casedescription":sf_case_description,
+                "caselastcomment":sf_case_last_comment
             }    
         },
         "fulfillment_response": {
             "messages": [
                 {   
                     "text": {
-                        "text": [msg]
+                        "text": [message]
                     }
                 }
             ]
         }
     }
-    return Response(json.dumps(message), 200)
+    return Response(json.dumps(message_resp), 200)
     #return Response(json.dumps(message), 200, mimetype='application/json')
 ###############################################################################
 def answer_webhook(msg):
@@ -165,8 +176,21 @@ def answer_webhook(msg):
 ###############################################################################
 def get_sf_contact_id(initial_request, sf):
     request_json = initial_request.get_json()
-    param_customer_id = request_json['sessionInfo']['parameters']['customerid']
+    channel = request_json['sessionInfo']['parameters']['channel']
+    documentId = ""
+    if channel == "voice":
+        print("this is a voice Call")
+        if request_json['payload']:
+            documentId = request_json['payload']['telephony']['caller_id']
+            print(documentId)
+    else:
+        print("this is a text interaction")
+        documentId = request_json['sessionInfo']['parameters']['customerid']
+        print(documentId)
+
+    param_customer_id = documentId
     query_string = "SELECT Id FROM Contact  WHERE Phone = '{}'".format(param_customer_id)
+    print(query_string)
     
     try:
         get_sf_customers_by_phone = sf.query(query_string)
