@@ -1,0 +1,7 @@
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.js?v=1"></script>
+<df-messenger
+  df-cx="true"
+  chat-title="hotel-assistant"
+  agent-id="fcb0a3b6-8299-4a9d-87e0-3731db89eab2"
+  language-code="ca"
+></df-messenger>

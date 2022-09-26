@@ -26,4 +26,57 @@
         }
       ]
     ]
+  },
+
+
+
+
+  {
+    "richContent": [
+      [
+        {
+          "type": "info",
+          "title": "Benvingut a Google Cloud Day",
+          "subtitle": "Voleu veure una demo? Pregunteu per les vostres reserves d'hotel...",
+          "image": {
+            "src": {
+              "rawUrl": "https://www.gstatic.com/devrel-devsite/prod/v1da7b456e5bc02128510243ec52c4436a3a0156c8bef683287ad2905d7856a0e/cloud/images/social-icon-google-cloud-1200-630.png
+              "
+            }
+          },
+         
+        }
+      ]
+    ]
+  },
+
+  {
+    "richContent": [
+      [
+        {
+          "type": "button1",
+          "icon": {
+            "type": "chevron_right",
+            "color": "#FF9800"
+          },
+          "text": "Button text",
+          "link": "https://example.com",
+          "event": {
+            "name": ""
+          }
+        },
+        {
+          "type": "button2",
+          "icon": {
+            "type": "chevron_right",
+            "color": "#FF9800"
+          },
+          "text": "Button text",
+          "link": "https://example.com",
+          "event": {
+            "name": ""
+          }
+        }
+      ]
+    ]
   }
