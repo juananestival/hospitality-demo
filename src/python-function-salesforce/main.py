@@ -14,7 +14,7 @@ def main(initial_request):
     try:
         # Get http request and parse it. 
         ver = os.environ.get('K_REVISION')
-        print(f"Function version: {ver}")
+        print(f"Python Function version: {ver}")
         request_json = initial_request.get_json()
         print("main - print: {}".format(request_json))
     
@@ -34,6 +34,7 @@ def main(initial_request):
             return WebhookResponse
         
         elif tag == 'caseLookup':
+            print ("Entering in Case lookup 1")
             sf_case_id, sf_case_number, sf_case_subject, sf_case_description, sf_case_last_comment = get_sf_cases(initial_request, sf)
             #WebhookResponse=answer_webhook(sf_case_subject)
             # for multilanguage is not usable to send text via webhook
@@ -54,7 +55,7 @@ def main(initial_request):
 
 # Add your functions here
 def get_sf_cases(initial_request, sf):
-    
+    print ("Entering in get_sf_cases")
     cid, name, lastName = get_sf_contact_id(initial_request, sf)
     query_cases_string = "SELECT Id, CaseNumber, Description, LastComment__c, CreatedDate, Status, Subject, ContactId FROM Case Where ContactId = '{}' Order by CaseNumber DESC Limit 5".format(cid)
     print(query_cases_string)
@@ -177,18 +178,32 @@ def answer_webhook(msg):
 
 ###############################################################################
 def get_sf_contact_id(initial_request, sf):
+    print ("Entering in get_sf_contact_id")
     request_json = initial_request.get_json()
-    channel = request_json['sessionInfo']['parameters']['channel']
     documentId = ""
-    if channel == "voice":
-        print("this is a voice Call")
-        if request_json['payload']:
-            documentId = request_json['payload']['telephony']['caller_id']
+    # if channel is not initilized for example to chat with Hi in default welcom intentn the following code will fail
+    # channel = request_json['sessionInfo']['parameters']['channel']
+
+    if "channel" in request_json['sessionInfo']['parameters']:
+        print ("the param channel exists")
+        channel = request_json['sessionInfo']['parameters']['channel']
+        if channel == "voice":
+            print("this is a voice Call")
+            if request_json['payload']:
+                documentId = request_json['payload']['telephony']['caller_id']
+                print(documentId)
+        else:
+            print("this is a non voice interaction")
+            documentId = request_json['sessionInfo']['parameters']['customerid']
             print(documentId)
+        
     else:
-        print("this is a text interaction")
+        print ("the param channel does not exists")
+        print("so i assume this is a text interaction")
         documentId = request_json['sessionInfo']['parameters']['customerid']
         print(documentId)
+    
+
 
     param_customer_id = documentId
     query_string = "SELECT Id FROM Contact  WHERE Phone = '{}'".format(param_customer_id)
