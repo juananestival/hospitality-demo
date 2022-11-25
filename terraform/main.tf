@@ -24,6 +24,15 @@ module "node_function_main" {
   runtimefn              = "nodejs16"
 }
 
+ module "node_main_feature_testing" {
+  source               = "./modules/functions"
+  project              = var.project
+  function_name        = "feature-testing-node"
+  function_entry_point = "main"
+  sourcefn             = "feature-testing"
+  runtimefn              = "nodejs16"
+}
+
 
      
 module "secrets" {

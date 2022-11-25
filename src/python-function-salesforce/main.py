@@ -26,7 +26,6 @@ def main(initial_request):
         tag = request_json['fulfillmentInfo']['tag']
         print(f"tag : {tag}")
 
-
         # Evaluate Tag
         if tag == 'phoneLookup':
             whatDoIHave = sf_phoneLookup(initial_request, sf)

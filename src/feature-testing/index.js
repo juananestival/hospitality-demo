@@ -15,7 +15,7 @@ function replaceAll(string, search, replace) {
 /*****************************************************************************/
 // MAIN SECTION
 /*****************************************************************************/
-exports.hospitalityMainWH = (req, res) => {
+exports.main = (req, res) => {
  
 
   // Log some parameters
@@ -55,6 +55,10 @@ exports.hospitalityMainWH = (req, res) => {
 
   if (tag === "get-loyalty-points") {
     getLoyaltyPoints(req, res);
+  }
+
+  if (tag === "get-confidence-score") {
+    getConfidenceScore(req, res);
   }
 
   // If enabled the function is stopped before getting fs answer
@@ -544,3 +548,33 @@ function getLoyaltyPoints (req, res) {
   // End query
 
 }
+
+/*****************************************************************************/
+/*****************************************************************************/
+
+function getConfidenceScore(req, res) {
+  console.log("Getting confidence score...");
+  if (req.body.intentInfo.hasOwnProperty("confidence")) {
+    let confidenceScore = req.body.intentInfo.confidence;
+    console.log(`Confidence score is ${confidenceScore}`);
+    return res.status(200).send({
+      sessionInfo: {
+        parameters: {
+          confidence_score: confidenceScore,
+        },
+      },
+    });
+  } else {
+    console.log("No confidence score present");
+    return res.status(200).send({
+      sessionInfo: {
+        parameters: {
+          confidence_score: "not found"
+        },
+      },
+    });
+  }
+}
+/*****************************************************************************/
+/*****************************************************************************/
+

@@ -1,0 +1,18 @@
+{
+  "detectIntentResponseId": "fa34775c-7587-411e-bd3d-f3906e18cef7",
+  "intentInfo": {
+    "lastMatchedIntent": "projects/hospitality-demo-361210/locations/global/agents/d934b9c5-0302-495b-a825-866ecad5e908/intents/8e45f522-d5ab-4c65-87a2-6e809efae06d",
+    "displayName": "Confidence Score Routing",
+    "confidence": 1
+  },
+  "pageInfo": {
+    "currentPage": "projects/hospitality-demo-361210/locations/global/agents/d934b9c5-0302-495b-a825-866ecad5e908/flows/00000000-0000-0000-0000-000000000000/pages/START_PAGE",
+    "displayName": "Start Page"
+  },
+  "sessionInfo": {
+    "session": "projects/hospitality-demo-361210/locations/global/agents/d934b9c5-0302-495b-a825-866ecad5e908/sessions/d5e8e2-73c-7eb-0e1-7a83f9ea4"
+  },
+  "fulfillmentInfo": { "tag": "get-confidence-score" },
+  "text": "I want to get the confidence score",
+  "languageCode": "en"
+}

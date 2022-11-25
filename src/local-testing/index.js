@@ -15,7 +15,7 @@ function replaceAll(string, search, replace) {
 /*****************************************************************************/
 // MAIN SECTION
 /*****************************************************************************/
-exports.hospitalityMainWH = (req, res) => {
+exports.main = (req, res) => {
  
 
   // Log some parameters
