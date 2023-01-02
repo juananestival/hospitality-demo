@@ -1,0 +1,9 @@
+# Function dependencies, for example:
+# package>=version
+google-cloud-secret-manager==0.2.0
+SQLAlchemy==1.4.41
+
+# If your database is MySQL, uncomment the following line:
+#PyMySQL==0.9.3
+# If your database is PostgreSQL, uncomment the following line:
+pg8000==1.29.2

@@ -1,0 +1,9 @@
+{
+    "model": "default",
+    "gcsUri":"gs://stt-demos/audio-files/caixabank/A0001_S003_0_G0001_G0002.wav",
+    "encoding":"WAV",
+    "sampleRateHertz":16000,
+    "languageCode":"es-ES",
+    "topic":"projects/hospitality-demo-361210/topics/dfcxtopic",
+    "message":"hey"
+}

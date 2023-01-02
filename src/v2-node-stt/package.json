@@ -1,0 +1,25 @@
+{
+  "name": "cloud-functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/pubsub": "^3.2.1",
+    "@google-cloud/speech": "^5.1.0",
+    "@google-cloud/storage": "^6.8.0",
+    "actions-on-google": "^3.0.0",
+    "create-html": "^4.1.0",
+    "dialogflow": "^1.2.0",
+    "fastify": "^4.5.3",
+    "firebase-admin": "^11.0.1",
+    "firebase-functions": "^3.23.0"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^3.1.3"
+  }
+}

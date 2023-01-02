@@ -6,3 +6,7 @@ variable "project" {
 variable "region" {
 	default = "us-central1" # Choose a region
 }
+
+variable "location" {
+	default = "us-central1" # Choose a region
+}

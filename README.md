@@ -4,6 +4,8 @@
 terraform apply -target=module.python_function_main --auto-approve
 terraform apply -target=module.node_function_main --auto-approve
 terraform apply -target=module.node_main_feature_testing --auto-approve
+terraform apply -target=module.python-cepf-lab --auto-approve
+terraform apply -target=module.v2-node-stt --auto-approve
 ```
 
 Python env creation
