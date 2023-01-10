@@ -43,3 +43,21 @@ curl -m 3010 -X POST https://v2-stt-recognize-czhewlm65q-uc.a.run.app \
     "message":"hey"
 }'
 ```
+
+5. remote word
+```sh
+curl -m 3010 -X POST https://v2-stt-recognize-czhewlm65q-uc.a.run.app \
+-H "Authorization: bearer $(gcloud auth print-identity-token)" \
+-H "Content-Type: application/json" \
+-d '{
+    "model": "latest_long",
+    "gcsUri":"gs://stt-demos/audio-files/caixabank/A0001_S003_0_G0001_G0002.wav",
+    "encoding":"WAV",
+    "sampleRateHertz":16000,
+    "languageCode":"es-ES",
+    "topic":"projects/hospitality-demo-361210/topics/dfcxtopic",
+    "message":"hey",
+    "confidenceThreshold":"0.7",
+    "enableWordLevelConfidence":true
+}'
+```

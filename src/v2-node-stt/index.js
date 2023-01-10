@@ -54,22 +54,36 @@ exports.index = (req, res) => {
         },
       });
   }
-  /*
-  if (!req.body.topic || !req.body.message) {
-    res
-      .status(400)
-      .send(
-        'Missing parameter(s); include "topic" and "message" properties in your request.'
-      );
-    return;
-  }
 
-  msg="test"
-  asyncPubTranscription(req, msg) 
+  if (
+    (req.body.hasOwnProperty("confidenceThreshold") &&
+    req.body.hasOwnProperty("enableWordLevelConfidence"))
+    
+    ) {
+      console.log('Word Confidence Translation Enabled')
+      
+      msg = asyncRecognizeGCSWords(
+        model,
+        gcsUri,
+        encoding,
+        sampleRateHertz,
+        languageCode,
+      )
 
+    } else {
+      console.log('Word Confidence Translation Disabled' )
+      msg = asyncRecognize(
+        model,
+        gcsUri,
+        encoding,
+        sampleRateHertz,
+        languageCode
+      )
 
-  console.log(`Recognition request received with ${model} ${gcsUri} ${encoding} ${sampleRateHertz} ${languageCode}`)
-  */
+    }
+    /*
+  asyncRecognizeGCSWords
+
   
   msg = asyncRecognize(
     model,
@@ -78,6 +92,7 @@ exports.index = (req, res) => {
     sampleRateHertz,
     languageCode
   )
+  */
   
   
   return res.status(200).send({
@@ -162,13 +177,76 @@ async function asyncRecognize(
   uploadFromMemory(transcription2).catch(console.error);  
   //asyncPubTranscription(req, msg) 
 }
+
+async function asyncRecognizeGCSWords(
+  model,
+  gcsUri,
+  encoding,
+  sampleRateHertz,
+  languageCode
+  
+) {
+  const speech = require('@google-cloud/speech');
+
+  // Creates a client
+  const client = new speech.SpeechClient();
+
+  const config = {
+    enableWordTimeOffsets: true,
+    encoding: encoding,
+    sampleRateHertz: sampleRateHertz,
+    languageCode: languageCode,
+    enableWordConfidence: true
+  };
+
+  const audio = {
+    uri: gcsUri,
+  };
+  
+
+  const request = {
+    config: config,
+    audio: audio,
+  };
+
+  const [operation] = await client.longRunningRecognize(request);
+
+  // Get a Promise representation of the final result of the job
+  const [response] = await operation.promise()
+  let fullText = ''
+  response.results.forEach(result => {
+    fullText = "<br>" + fullText + "<br>" 
+    //console.log(`Transcription: ${result.alternatives[0].transcript}`);
+
+    result.alternatives[0].words.forEach(wordInfo => {
+      const startSecs =
+        `${wordInfo.startTime.seconds}` +
+        '.' +
+        wordInfo.startTime.nanos / 100000000;
+      const endSecs =
+        `${wordInfo.endTime.seconds}` +
+        '.' +
+        wordInfo.endTime.nanos / 100000000;
+      const wordConfidence = 
+        `${wordInfo.confidence}`
+      
+              fullText = fullText + `<span style="color:${wordInfo.confidence > 0.8? 'green' : 'red'}" title="${wordInfo.confidence}">${wordInfo.word} </span>`
+      
+      
+    });
+    uploadFromMemory(fullText).catch(console.error);  
+    //console.log (fullText)
+  });
+  // [END speech_transcribe_async_word_time_offsets_gcs]
+}
+
 async function uploadFromMemory(text) {
   const storage = new Storage();
   const bucketName = 'stt-demos'
   const destFileName = `transcripts/from-cloud-function/just-testing-2${Date.now()}.html`;
   var html = createHTML({
-    title: 'example',
-    head: '<meta name="description" content="example">',
+    title: 'Transcription Results',
+    head: '<meta name="description" content="Transcription Results">',
     body: `<p><b>${text}</b></p>`,
 
   })
@@ -178,46 +256,3 @@ async function uploadFromMemory(text) {
     `${destFileName} with contents ${html} uploaded to ${bucketName}.`
   );
 }
-// Function asyncRecognize End
-
-
-// Function asyncPubTranscription Init
-/*
-async function asyncPubTranscription(req, msg) {
-
-  // References an existing topic
-  const topic = pubsub.topic(req.body.topic);
-
-  const messageObject = {
-    data: {
-      message: req.body.message,
-    },
-  };
-
-  const messageBuffer = Buffer.from(JSON.stringify(messageObject)+msg, 'utf8');
-  // Publishes a message
-  try {
-    await topic.publish(messageBuffer);
-    //res.status(200).send('Message published.');
-  } catch (err) {
-    console.error(err);
-    //res.status(500).send(err);
-    return Promise.reject(err);
-  }
-
-
-}
-/*
-
-// Function asyncPubTranscription End
-
-
-// Function <name> Init
-
-// Function <name> 
-
-
-/*****************************************************************************/
-// ENDFUNCTIONS SECTION
-/*****************************************************************************/
-
