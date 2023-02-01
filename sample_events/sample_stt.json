@@ -7,5 +7,6 @@
     "topic":"projects/hospitality-demo-361210/topics/dfcxtopic",
     "message":"Future Pubsub Integration",
     "confidenceThreshold":"0.7",
-    "enableWordLevelConfidence":true
+    "enableWordLevelConfidence":false
 }
+

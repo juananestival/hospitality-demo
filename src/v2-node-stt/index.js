@@ -5,7 +5,7 @@ const PROJECTID = "hospitality-demo-361210";
 const speech = require('@google-cloud/speech');
 //const {PubSub} = require('@google-cloud/pubsub');
 //const pubsub = new PubSub();
-const {Storage} = require('@google-cloud/storage');
+const {Storage} = require('@google-cloud/storage')
 var createHTML = require('create-html')
 
 // Declare your endpoint
@@ -27,13 +27,9 @@ exports.index = (req, res) => {
   console.log(`Function version: ${process.env.K_REVISION}`);
   console.log(`Body Log: ${JSON.stringify(req.body)}`)
 
-  let model = req.body.model;
-  let gcsUri = req.body.gcsUri;
-  let encoding = req.body.encoding;
-  let sampleRateHertz = req.body.sampleRateHertz;
-  let languageCode = req.body.languageCode;
+  
 
-  let test = process.env.ddd;
+  //let test = process.env.ddd;
 
 
   if (
@@ -54,10 +50,15 @@ exports.index = (req, res) => {
         },
       });
   }
+  let model = req.body.model;
+  let gcsUri = req.body.gcsUri;
+  let encoding = req.body.encoding;
+  let sampleRateHertz = req.body.sampleRateHertz;
+  let languageCode = req.body.languageCode;
 
   if (
     (req.body.hasOwnProperty("confidenceThreshold") &&
-    req.body.hasOwnProperty("enableWordLevelConfidence"))
+    req.body.hasOwnProperty("enableWordLevelConfidence")&&(enableWordLevelConfidence==true))
     
     ) {
       console.log('Word Confidence Translation Enabled')
@@ -163,7 +164,7 @@ async function asyncRecognize(
   const transcription2 = response.results
     .map((result, index) => ('<br>' + index + '--> ' +result.alternatives[0].transcript + '<br>' ))
     .join('\n\n')
-    console.log(`Transcription: ${transcription2}`);
+    //console.log(`Transcription: ${transcription2}`);
     console.log(`Transcription for model: ${config.model} confidence is: ${response.results[0].alternatives[0].confidence}`)
   
   const msg = {
@@ -174,7 +175,10 @@ async function asyncRecognize(
       },
     },
   }
-  uploadFromMemory(transcription2).catch(console.error);  
+  const sourceFile = gcsUri.split('/').pop().split('.')[0]
+  const fileNameToWrite = `${sourceFile}-${model}-${encoding}-${sampleRateHertz}-${languageCode}-`
+  
+  uploadFromMemory(transcription2, fileNameToWrite).catch(console.error);  
   //asyncPubTranscription(req, msg) 
 }
 
@@ -234,23 +238,42 @@ async function asyncRecognizeGCSWords(
       
       
     });
-    uploadFromMemory(fullText).catch(console.error);  
+    //const sourceFile = gcsUri.split('/').pop().split('.')[0]
+    //const fileNameToWrite = `${sourceFile}-${model}-${encoding}-${sampleRateHertz}-${languageCode}-`
+  
+      //uploadFromMemory(fullText, fileNameToWrite).catch(console.error);  
     //console.log (fullText)
   });
+  const sourceFile = gcsUri.split('/').pop().split('.')[0]
+  const fileNameToWrite = `${sourceFile}-${model}-${encoding}-${sampleRateHertz}-${languageCode}-`
+  console.log('now outside of the loop')
+  console.log(`outside transcription ${fullText}`)
+  uploadFromMemory(fullText, fileNameToWrite).catch(console.error); 
   // [END speech_transcribe_async_word_time_offsets_gcs]
 }
 
-async function uploadFromMemory(text) {
+async function uploadFromMemory(text, fileNameToWrite) {
+  console.log('uploading to a file...')
+  const options = {
+    resumable: false,
+    timeout:300
+    //contentType: 'application/json'
+  };
+
   const storage = new Storage();
   const bucketName = 'stt-demos'
-  const destFileName = `transcripts/from-cloud-function/just-testing-2${Date.now()}.html`;
+  const destFileName = `transcripts/from-cloud-function/${fileNameToWrite}${Date.now()}.html`;
   var html = createHTML({
     title: 'Transcription Results',
     head: '<meta name="description" content="Transcription Results">',
     body: `<p><b>${text}</b></p>`,
 
   })
-  await storage.bucket(bucketName).file(destFileName).save(html);
+  await storage.bucket(bucketName).file(destFileName).createWriteStream(html, options);
+  //await storage.bucket(bucketName).file(destFileName).save(html, options);
+  console.log('uploading after await createWriteStream')
+  await storage.bucket(bucketName).file(destFileName).save(html, options);
+  console.log('uploading after await save')
 
   console.log(
     `${destFileName} with contents ${html} uploaded to ${bucketName}.`

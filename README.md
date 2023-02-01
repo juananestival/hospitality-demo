@@ -45,3 +45,22 @@ this means that it should be accesible from any agent.
   runtimefn              = "nodejs16"
 }
 ```
+
+
+```sh
+curl -m 3010 -X POST https://v2-stt-recognize-czhewlm65q-uc.a.run.app \
+-H "Authorization: bearer $(gcloud auth print-identity-token)" \
+-H "Content-Type: application/json" \
+-d '{
+    "model": "latest_long",
+    "gcsUri":"gs://stt-demos/audio-files/spanish-dataset/Spanish_Conversational_Speech_Corpus/WAV/A0001_S004_0_G0001_G0002.wav",
+    "encoding":"WAV",
+    "sampleRateHertz":16000,
+    "languageCode":"es-ES",
+    "topic":"projects/hospitality-demo-361210/topics/dfcxtopic",
+    "message":"Future Pubsub Integration",
+    "confidenceThreshold":"0.7",
+    "enableWordLevelConfidence":true
+}'
+```
+
