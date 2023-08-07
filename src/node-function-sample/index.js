@@ -77,7 +77,22 @@ function channelEvaluation(req, res) {
         },
       },
     });
-  } else {
+  } else if (req.body.sessionInfo.parameters.hasOwnProperty("ANI")){
+    console.log('ccaip call')
+    let phoneNumber = req.body.sessionInfo.parameters.ANI;
+    console.log("CHANNEL-TYPE: VOICE");
+    return res.status(200).send({
+      sessionInfo: {
+        parameters: {
+          channel: "voice",
+          ani: phoneNumber,
+        },
+      },
+    });
+
+
+  } else 
+  {
     console.log("CHANNEL-TYPE: TEXT");
     return res.status(200).send({
       sessionInfo: {
@@ -94,11 +109,20 @@ function channelEvaluation(req, res) {
 function validateCustomer(req, res) {
   let channel = req.body.sessionInfo.parameters.channel;
   let documentId;
+  console.log(`Incoming interaction through channer ${channel}`)
 
   if (channel === "voice") {
+    console.log('CCAIP or GW?')
     if (req.body.hasOwnProperty("payload")) {
+      
+      console.log('gw')
       documentId = req.body.payload.telephony.caller_id;
+    } else {
+      console.log('ccaip')
+      documentId = req.body.sessionInfo.parameters.ANI;
+      console.log(`Dcoument id: ${documentId}`)
     }
+
   } else {
     documentId = req.body.sessionInfo.parameters.customerid;
   }

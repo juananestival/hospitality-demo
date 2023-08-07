@@ -23,6 +23,14 @@ module "node_function_main" {
   sourcefn             = "node-function-sample"
   runtimefn              = "nodejs16"
 }
+module "node_pokemon" {
+  source               = "./modules/functions"
+  project              = var.project
+  function_name        = "node-pokemon"
+  function_entry_point = "index"
+  sourcefn             = "node-pokemon"
+  runtimefn              = "nodejs16"
+}
 
  module "node_main_feature_testing" {
   source               = "./modules/functions"

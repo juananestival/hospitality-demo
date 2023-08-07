@@ -1,0 +1,49 @@
+{
+   "detectIntentResponseId":"37939eff-990f-4f6b-b55d-57419d79c4b2",
+   "pageInfo":{
+      "currentPage":"projects/hospitality-demo-361210/locations/global/agents/9bee17fb-53a4-45b5-9309-f144d190ad4c/flows/00000000-0000-0000-0000-000000000000/pages/ef4e6571-b099-4fb5-9aa5-8128c22b108e",
+      "formInfo":{
+         "parameterInfo":[
+            {
+               "displayName":"customerpin",
+               "required":true,
+               "state":"FILLED",
+               "value":"1234",
+               "justCollected":true
+            }
+         ]
+      },
+      "displayName":"Ask PIN"
+   },
+   "sessionInfo":{
+      "session":"projects/hospitality-demo-361210/locations/global/agents/9bee17fb-53a4-45b5-9309-f144d190ad4c/sessions/voice_call-95-va-8",
+      "parameters":{
+         "ani":"+34664004600",
+         "customerpin":"1234",
+         "customerverified":"not-set"
+      }
+   },
+   "fulfillmentInfo":{
+      "tag":"validate-customer"
+   },
+   "messages":[
+      {
+         "text":{
+            "text":[
+               "Gracias, Un momento mientras verificamos su clave"
+            ],
+            "redactedText":[
+               "Gracias, Un momento mientras verificamos su clave"
+            ]
+         },
+         "responseType":"HANDLER_PROMPT",
+         "source":"VIRTUAL_AGENT"
+      }
+   ],
+   "sentimentAnalysisResult":{
+      "score":0.3,
+      "magnitude":0.3
+   },
+   "transcript":"1234",
+   "languageCode":"es-ES"
+}

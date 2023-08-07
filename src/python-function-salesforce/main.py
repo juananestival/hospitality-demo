@@ -188,7 +188,13 @@ def get_sf_contact_id(initial_request, sf):
         channel = request_json['sessionInfo']['parameters']['channel']
         if channel == "voice":
             print("this is a voice Call")
-            if request_json['payload']:
+           
+            if request_json['sessionInfo']['parameters']['ccaipchannel']:
+                print("ccaip call")
+                documentId = request_json['sessionInfo']['parameters']['ANI']
+                print(documentId)
+            elif request_json['payload']:
+                print("google voice call call")
                 documentId = request_json['payload']['telephony']['caller_id']
                 print(documentId)
         else:
