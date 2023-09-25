@@ -10,3 +10,10 @@ variable "region" {
 variable "location" {
 	default = "us-central1" # Choose a region
 }
+variable "postgresql_db" {
+	default = "postgres" # Choose a region
+}
+
+variable "postgresql_instance" {
+	default = "dfcxlabs" # Choose a region
+}

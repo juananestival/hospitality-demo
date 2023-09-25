@@ -13,6 +13,9 @@ module "python_function_main" {
   function_entry_point = "main"
   sourcefn             = "python-function-salesforce"
   runtimefn              = "python310"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 
 module "node_function_main" {
@@ -22,6 +25,9 @@ module "node_function_main" {
   function_entry_point = "hospitalityMainWH"
   sourcefn             = "node-function-sample"
   runtimefn              = "nodejs16"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 module "node_pokemon" {
   source               = "./modules/functions"
@@ -30,6 +36,9 @@ module "node_pokemon" {
   function_entry_point = "index"
   sourcefn             = "node-pokemon"
   runtimefn              = "nodejs16"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 
  module "node_main_feature_testing" {
@@ -39,15 +48,21 @@ module "node_pokemon" {
   function_entry_point = "main"
   sourcefn             = "feature-testing"
   runtimefn              = "nodejs16"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 
-module "python_veryfy_pin_function_main" {
+module "python_verify_pin_function_main" {
   source               = "./modules/functions"
   project              = var.project
   function_name        = "verify-pin"
   function_entry_point = "verify_pin"
   sourcefn             = "python-function-verify-pin"
   runtimefn              = "python310"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 module "python_account_management_function_main" {
   source               = "./modules/functions"
@@ -56,6 +71,9 @@ module "python_account_management_function_main" {
   function_entry_point = "account_management"
   sourcefn             = "python-account-management"
   runtimefn              = "python310"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 
 module "python_get_speaker_ids_function_main" {
@@ -65,6 +83,9 @@ module "python_get_speaker_ids_function_main" {
   function_entry_point = "get_speaker_ids"
   sourcefn             = "python-get-speaker-ids"
   runtimefn              = "python310"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 module "python_register_speaker_ids_function_main" {
   source               = "./modules/functions"
@@ -73,6 +94,9 @@ module "python_register_speaker_ids_function_main" {
   function_entry_point = "register_speaker_id"
   sourcefn             = "python-register-speaker-id"
   runtimefn              = "python310"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 
 module "python-cepf-lab" {
@@ -82,6 +106,9 @@ module "python-cepf-lab" {
   function_entry_point = "main"
   sourcefn             = "python-cepf-lab"
   runtimefn              = "python310"
+  postgresql_instance  = var.postgresql_instance
+  postgresql_db        = var.postgresql_db
+  region               = var.region
 }
 module "v2-node-stt" {
   source               = "./modules/functionsv2"

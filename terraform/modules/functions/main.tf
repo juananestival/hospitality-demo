@@ -53,7 +53,10 @@ resource "google_cloudfunctions_function" "function" {
   entry_point           = var.function_entry_point
   environment_variables = {
     sftype_object = "Contact",
-    gcp_project_id = "hospitality-demo-361210"
+    postgresql_db = var.postgresql_db,
+    postgresql_instance = var.postgresql_instance
+    gcp_project_id = var.project
+    region = var.region
   }
 }
 

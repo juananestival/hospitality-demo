@@ -4,3 +4,6 @@ variable "function_name" {}
 variable "function_entry_point" {}
 variable "sourcefn" {}
 variable "runtimefn" {}
+variable "postgresql_instance" {}
+variable "postgresql_db" {}
+variable "region" {}

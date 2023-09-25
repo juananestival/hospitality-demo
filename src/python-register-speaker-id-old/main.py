@@ -3,7 +3,7 @@ import sqlalchemy
 from google.cloud import secretmanager
 import os
 
-def get_speaker_ids(request):
+def register_speaker_id(request):
     """Responds to any HTTP request.
     Args:
         request (flask.Request): HTTP request object.
@@ -12,35 +12,21 @@ def get_speaker_ids(request):
         Response object using
         `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
     """
-    # Get the version of the CF and log it for debugging purposes
-    version = os.environ.get('K_REVISION')
-    print(f"Python Function version: {version}")
+    
+    # Get the version of the CF for proper
+    ver = os.environ.get('K_REVISION')
+    print(f"Python Function version: {ver}")
     
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
     # something like https://cloud.google.com/secret-manager/docs/overview to help keep
     # secrets secret.
     request_json = request.get_json()
-    print(f'Request for debugging purposes {request_json}')
-    # You may need to edit the following line if you are not using the
-    # Dialogflow CX Phone Gateway. It may be helpful to uncomment the following:
-    # print(request_json)
-    # Using the printed JSON, look for the phone number provided by the
-    # phone gateway and fetch it from the dictionary below.
-    
-    # Get Connection Details fron environment variables.
-    postgresql_db = os.environ.get('postgresql_db')
-    postgresql_instance = os.environ.get('postgresql_instance')
-    region = os.environ.get('region')
-    project_id = os.environ.get('gcp_project_id')
-    postgresql_connection_name = project_id + ':' + region + ':' + postgresql_instance
-    print(f"DB Connection Details: {postgresql_connection_name}")
-    
-    # Define Secret Manager client
     client = secretmanager.SecretManagerServiceClient()
     
     # The String below is the secret name to be configured in Secret Manager
     db_user_prod = "DB_USER_PROD"
     db_pass_prod = "DB_PASS_PROD"
+    project_id = os.environ["gcp_project_id"]
     
     # Obtain the Secret Name Path
     db_user_prod_name = f"projects/{project_id}/secrets/{db_user_prod}/versions/latest"
@@ -53,15 +39,21 @@ def get_speaker_ids(request):
         # Parse the Secret Response & Decode Payload
     user_prod_secret = db_user_prod_response.payload.data.decode('UTF-8')  
     pass_prod_secret = db_pass_prod_response.payload.data.decode('UTF-8') 
+
+
     
-    
-    # Remember that this payload is vendor specific. 
+    # You may need to edit the following line if you are not using the
+    # Dialogflow CX Phone Gateway. It may be helpful to uncomment the following:
+    # print(request_json)
+    # Using the printed JSON, look for the phone number provided by the
+    # phone gateway and fetch it from the dictionary below.
     phone_number = request_json['payload']['telephony']['caller_id']
+    new_speaker_id = request_json['sessionInfo']['parameters']['new-speaker-id']
     db_user = user_prod_secret
     db_pass = pass_prod_secret
-    db_name = postgresql_db
+    db_name = 'postgres'
     db_socket_dir = '/cloudsql'
-    cloud_sql_connection_name = postgresql_connection_name
+    cloud_sql_connection_name = 'hospitality-demo-361210:us-central1:dfcxlabs'
     db = sqlalchemy.create_engine(
         sqlalchemy.engine.url.URL.create(
             drivername='postgresql+pg8000',
@@ -88,20 +80,15 @@ def get_speaker_ids(request):
         return ''
 
     with db.connect() as conn:
-        speaker_ids = conn.execute(
-            'SELECT gcp_resource_name FROM speaker_id WHERE account_id = {}'.format(account_id)).fetchall()
+        conn.execute(
+            "INSERT INTO speaker_id (gcp_resource_name, account_id) VALUES ('{}', {})".format(new_speaker_id, account_id))
 
-    speaker_ids = [row[0] for row in speaker_ids]
-
-    if len(speaker_ids) > 0:
-        response_json = json.dumps({
-            'sessionInfo': {
-                'parameters': {
-                    'speaker-ids': speaker_ids,
-                }
+    response_json = json.dumps({
+        'sessionInfo': {
+            'parameters': {
+                'speakerIdRegistered': True,
+                'userAuthenticated': True
             }
-        })
-        return response_json
-    else:
-        print('No speaker IDs associated with phone number:', phone_number, 'Account:', account_id)
-        return ''
+        }
+    })
+    return response_json
