@@ -5,3 +5,6 @@ output "function_uri_dialog_main" {
 output "function_uri_salesforce" {
 	value = module.python_function_main.function_url
 }
+output "vertex_search" {
+	value = module.vertex_search
+}

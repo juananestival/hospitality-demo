@@ -130,6 +130,16 @@ module "v2-node-main" {
   location             = "us-central1"
 }
 
+module "vertex_search" {
+  source               = "./modules/functionsv2"
+  project              = var.project
+  function_name        = "vertex-search"
+  function_entry_point = "main"
+  sourcefn             = "vertex-search"
+  runtimefn            = "python311"
+  location             = "us-central1"
+}
+
      
 module "secrets" {
   source               = "./modules/secrets"

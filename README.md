@@ -10,6 +10,7 @@ terraform apply -target=module.python_verify_pin_function_main --auto-approve
 terraform apply -target=module.terraform -target=module.python_register_speaker_ids_function_main --auto-approve
 
 terraform apply -target=module.python_get_speaker_ids_function_main --auto-approve
+terraform apply -target=module.vertex_search --auto-approve
 
 ```
 
